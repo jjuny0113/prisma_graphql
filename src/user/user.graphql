@@ -1,0 +1,32 @@
+type User {
+  # Example field (placeholder)
+  id: Int!
+  email: String!
+  password: String!
+}
+
+input CreateUserInput {
+  # Example field (placeholder)
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type AuthEntity {
+  accessToken: String
+}
+
+type Query {
+  # user: [User]!
+  user: User
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  login(loginInput: LoginInput): AuthEntity!
+  removeUser(id: Int!): User
+}

@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+
+  postgres:
+    image: postgres:15.2
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - ./db_data:/usr/local/postgresql/data
+    ports:
+      - '5435:5432'
