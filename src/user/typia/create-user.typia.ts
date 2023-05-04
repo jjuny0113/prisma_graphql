@@ -1,6 +1,6 @@
 import { CreateUserInput } from 'src/graphql';
 
-export class CreateUserInputCheckType extends CreateUserInput {
+export class CreateUserInputTypeCheck extends CreateUserInput {
   /**
    * @maxLength 50
    */
