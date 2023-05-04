@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
-import { CreateUserInput } from '../../user/dto/create-user.input';
+
 import { Builder } from 'builder-pattern';
+import { CreateUserInput } from 'src/graphql';
 
 export const encryptPassword = async (createUserInput: CreateUserInput) => {
   const encryptedPassword = await bcrypt.hash(createUserInput.password, 10);

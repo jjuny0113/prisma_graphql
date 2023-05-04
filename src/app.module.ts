@@ -9,6 +9,13 @@ import { UserModule } from './user/user.module';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import {
+  GraphQLError,
+  GraphQLErrorOptions,
+  GraphQLFormattedError,
+} from 'graphql';
+import {} from '@nestjs/apollo';
+import { customFormatError } from './common/utils/graphql';
 
 @Module({
   imports: [
@@ -20,6 +27,7 @@ import { ConfigModule } from '@nestjs/config';
         path: join(process.cwd(), 'src/graphql.ts'),
         outputAs: 'class',
       },
+      formatError: customFormatError,
     }),
     UserModule,
     AuthModule,

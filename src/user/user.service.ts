@@ -1,8 +1,11 @@
+import { Injectable } from '@nestjs/common';
+import { UserInputError } from 'apollo-server-express';
 import { UserRepository } from './user.repository';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
+
+import { CreateUserInput } from 'src/graphql';
+import typia from 'typia';
 import { encryptPassword } from '../auth/util/bcrypt';
+import { CreateUserInputCheckType } from './typeChecker/create-user.check';
 
 @Injectable()
 export class UserService {
@@ -11,9 +14,10 @@ export class UserService {
     const isExist = await this.userRepository.findByEmail(
       createUserInput.email,
     );
-    console.log('isExist', isExist);
+    typia.assert<CreateUserInputCheckType>(createUserInput);
+
     if (isExist) {
-      throw new HttpException('등록된 유저입니다', HttpStatus.BAD_REQUEST);
+      throw new UserInputError('등록된 유저입니다');
     }
     const encryptedPassWordUser = await encryptPassword(createUserInput);
     return this.userRepository.create(encryptedPassWordUser);
