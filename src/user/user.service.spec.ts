@@ -10,6 +10,7 @@ import { TypeGuardError } from 'typia';
 import { UserInputError } from 'apollo-server-express';
 import { userMockRepository, userMockResolver } from './user.mock';
 import { authMockService, JwtMockStrategy } from 'src/auth/auth.mock';
+import { Status } from 'src/graphql';
 
 describe('UserServiceTest', () => {
   let service: UserService;
@@ -58,14 +59,12 @@ describe('UserServiceTest', () => {
       expect(createUser.message).toBe(`${user.email} 유저가 등록되었습니다`);
     });
     it('아이디가 50자가 넘어가면 error', async () => {
-      try {
-        await service.signUp({
-          email: Array(60).fill('a').join(''),
-          password: '1234',
-        });
-      } catch (e) {
-        expect(e instanceof TypeGuardError).toBe(true);
-      }
+      const createdUser = await service.signUp({
+        email: Array(60).fill('a').join(''),
+        password: '1234',
+      });
+      expect(createdUser.status).toBe(Status.ERROR);
+      expect(createdUser.message).toBe(`잘못된 입력입니다`);
     });
     it('기존에 있던 유저이면 errer', async () => {
       const user = {
@@ -74,11 +73,9 @@ describe('UserServiceTest', () => {
         password: '1234',
       };
       jest.spyOn(repository, 'findByEmail').mockResolvedValue(user);
-      try {
-        await service.signUp(user);
-      } catch (e) {
-        expect(e instanceof UserInputError).toBe(true);
-      }
+      const createdUser = await service.signUp(user);
+      expect(createdUser.status).toBe(Status.ERROR);
+      expect(createdUser.message).toBe('이미 등록된 유저입니다.');
     });
   });
 });

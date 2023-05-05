@@ -1,3 +1,3 @@
-export class AuthEntity {
+export class LoginReturnType {
   accessToken: string;
 }

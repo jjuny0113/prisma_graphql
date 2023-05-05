@@ -11,7 +11,7 @@ export const authMockService: AuthService = {
   login: jest.fn(),
 };
 
-interface IJwtMockService {
+export interface IJwtMockService {
   sign(payload: string | Buffer | object, options?: JwtSignOptions): string;
   signAsync(
     payload: string | Buffer | object,

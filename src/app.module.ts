@@ -6,7 +6,6 @@ import { join } from 'path';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { customFormatError } from './common/utils/graphql';
 
 @Module({
   imports: [
@@ -18,7 +17,6 @@ import { customFormatError } from './common/utils/graphql';
         path: join(process.cwd(), 'src/graphql.ts'),
         outputAs: 'class',
       },
-      formatError: customFormatError,
     }),
     UserModule,
     AuthModule,

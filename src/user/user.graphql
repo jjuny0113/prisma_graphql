@@ -5,6 +5,19 @@ type User {
   password: String!
 }
 
+enum Status {
+  OK
+  ERROR
+}
+
+interface ReturnType {
+  status: Status!
+}
+type UserReturnType implements ReturnType {
+  status: Status!
+  message: String!
+}
+
 input CreateUserInput {
   # Example field (placeholder)
   email: String!
@@ -16,8 +29,10 @@ input LoginInput {
   password: String!
 }
 
-type AuthEntity {
+type LoginReturnType implements ReturnType {
+  status: Status!
   accessToken: String
+  message: String
 }
 
 type Query {
@@ -26,7 +41,7 @@ type Query {
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
-  login(loginInput: LoginInput): AuthEntity!
+  createUser(createUserInput: CreateUserInput!): UserReturnType
+  login(loginInput: LoginInput): LoginReturnType!
   removeUser(id: Int!): User
 }

@@ -9,7 +9,7 @@ export const jwtStrategyProvider: Provider[] = [
     useClass: JwtStrategyImpl,
   },
   {
-    provide: AuthInjectionToken.JwtService,
+    provide: JwtService,
     useClass: JwtService,
   },
 ];

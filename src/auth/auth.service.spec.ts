@@ -9,6 +9,7 @@ import { JwtMockStrategy, authMockService, jwtMockService } from './auth.mock';
 import { UserRepository } from 'src/user/domain/UserRepository';
 import { LoginUser } from 'src/user/dto/login-user.input';
 import { JwtService } from '@nestjs/jwt';
+import { Status } from 'src/graphql';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -51,32 +52,28 @@ describe('AuthService', () => {
 
   describe('login test', () => {
     it('등록되지 않은 user가 로그인 시도시 error', async () => {
-      try {
-        const user: LoginUser = {
-          email: 'test@test.com',
-          password: '1234',
-        };
-        jest.spyOn(repository, 'findByEmail').mockResolvedValue(null);
-        await service.login(user);
-      } catch (e) {
-        expect(e instanceof UnauthorizedException).toBe(true);
-      }
+      const user: LoginUser = {
+        email: 'test@test.com',
+        password: '1234',
+      };
+      jest.spyOn(repository, 'findByEmail').mockResolvedValue(null);
+      const loginUser = await service.login(user);
+      expect(loginUser.status).toBe(Status.ERROR);
+      expect(loginUser.message).toBe('이메일과 비밀번호를 확인해주세요.');
     });
     it('입력된 비밀번호와 db의 비밀번호가 다르면 error', async () => {
-      try {
-        const user: LoginUser = {
-          email: 'test@test.com',
-          password: '1234',
-        };
-        jest.spyOn(repository, 'findByEmail').mockResolvedValue({
-          id: 1,
-          email: 'test@test.com',
-          password: '12345',
-        });
-        await service.login(user);
-      } catch (e) {
-        expect(e instanceof UnauthorizedException).toBe(true);
-      }
+      const user: LoginUser = {
+        email: 'test@test.com',
+        password: '1234',
+      };
+      jest.spyOn(repository, 'findByEmail').mockResolvedValue({
+        id: 1,
+        email: 'test@test.com',
+        password: '12345',
+      });
+      const loginUser = await service.login(user);
+      expect(loginUser.status).toBe(Status.ERROR);
+      expect(loginUser.message).toBe('이메일과 비밀번호를 확인해주세요.');
     });
     it('입력된 비밀번호와 저장된 비밀번호가 같으면 accessToken 지급', async () => {
       const user: LoginUser = {
@@ -90,6 +87,7 @@ describe('AuthService', () => {
       });
       jest.spyOn(jwtService, 'sign').mockReturnValue('로그인 토큰 지급');
       const loginUser = await service.login(user);
+      expect(loginUser.status).toBe(Status.OK);
       expect(loginUser.hasOwnProperty('accessToken')).toBe(true);
       expect(loginUser.accessToken).toBe('로그인 토큰 지급');
     });
