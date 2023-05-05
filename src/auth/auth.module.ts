@@ -1,13 +1,28 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module, Provider, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthService } from './auth.service';
-import { UserModule } from 'src/user/user.module';
-import { UserRepository } from 'src/user/user.repository';
-import { ConfigModule } from '@nestjs/config';
-import { JwtStrategy } from './jwt/jwt.strategy';
+import { AuthServiceImpl } from './auth.service';
+import { UserInjectionToken } from 'src/user/UserInjectionToken';
+import { UserRepositoryImpl } from 'src/user/user.repository';
+import { AuthInjectionToken } from './AuthInjectionToken';
+import { JwtStrategyImpl } from './jwt/jwt.strategy';
+
+const infrastructure: Provider[] = [
+  {
+    provide: UserInjectionToken.USER_REPOSITORY,
+    useClass: UserRepositoryImpl,
+  },
+  {
+    provide: AuthInjectionToken.AuthService,
+    useClass: AuthServiceImpl,
+  },
+  {
+    provide: AuthInjectionToken.JwtStrategy,
+    useClass: JwtStrategyImpl,
+  },
+];
 
 @Module({
   imports: [
@@ -24,7 +39,6 @@ import { JwtStrategy } from './jwt/jwt.strategy';
     }),
     forwardRef(() => PrismaModule),
   ],
-  providers: [AuthService, UserRepository, PrismaService, JwtStrategy],
-  exports: [AuthService],
+  providers: [...infrastructure, PrismaService],
 })
 export class AuthModule {}

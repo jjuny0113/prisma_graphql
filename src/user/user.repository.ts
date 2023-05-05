@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserInput } from 'src/graphql';
-
+import { UserRepository } from './domain/UserRepository';
 
 @Injectable()
-export class UserRepository {
+export class UserRepositoryImpl implements UserRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findByEmail(email: string) {
