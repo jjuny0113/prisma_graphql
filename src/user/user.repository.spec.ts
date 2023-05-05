@@ -1,6 +1,8 @@
-import { UserRepository } from '../user/user.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
+import { UserRepository } from './domain/UserRepository';
+import { UserInjectionToken } from './UserInjectionToken';
+import { UserRepositoryImpl } from './user.repository';
 
 describe('userRepository', () => {
   let repository: UserRepository;
@@ -8,7 +10,10 @@ describe('userRepository', () => {
     const prisma = jestPrisma.client;
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        UserRepository,
+        {
+          provide: UserInjectionToken.USER_REPOSITORY,
+          useClass: UserRepositoryImpl,
+        },
         {
           provide: PrismaService,
           useValue: {
@@ -17,7 +22,7 @@ describe('userRepository', () => {
         },
       ],
     }).compile();
-    repository = module.get<UserRepository>(UserRepository);
+    repository = module.get<UserRepository>(UserInjectionToken.USER_REPOSITORY);
   });
 
   test('Add user', async () => {
@@ -37,7 +42,7 @@ describe('userRepository', () => {
     };
     const createdUser = await repository.create(user);
     const findUser = await repository.findById(createdUser.id);
-    expect(findUser.email).toEqual(user.email);
+    expect(findUser?.email).toEqual(user.email);
   });
 
   test('findByEmail', async () => {
@@ -47,6 +52,6 @@ describe('userRepository', () => {
     };
     const createdUser = await repository.create(user);
     const findUser = await repository.findByEmail(createdUser.email);
-    expect(findUser.email).toEqual(user.email);
+    expect(findUser?.email).toEqual(user.email);
   });
 });
