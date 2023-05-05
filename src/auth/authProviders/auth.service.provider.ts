@@ -5,6 +5,8 @@ import { AuthInjectionToken } from '../AuthInjectionToken';
 import { validatePassword } from '../util/bcrypt';
 import { JwtStrategyImpl } from '../jwt/jwt.strategy';
 import { AuthServiceImpl } from '../auth.service';
+import { userMockRepository } from 'src/user/user.mock';
+import { JwtMockStrategy } from '../auth.mock';
 
 export const authServiceProvider: Provider[] = [
   {

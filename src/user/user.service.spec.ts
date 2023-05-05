@@ -3,34 +3,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserResolver } from './user.resolver';
 import { UserInjectionToken } from './UserInjectionToken';
 import { UserServiceImpl } from './user.service';
-
 import { AuthInjectionToken } from 'src/auth/AuthInjectionToken';
 import { UserService } from './domain/UserService';
-import { JwtStrategy } from 'src/auth/domain/JwtStrategy';
-import { AuthService } from 'src/auth/domain/AuthService';
 import { UserRepository } from './domain/UserRepository';
 import { TypeGuardError } from 'typia';
 import { UserInputError } from 'apollo-server-express';
-
-const userMockResolver = {
-  signUp: jest.fn(),
-  login: jest.fn(),
-  me: jest.fn(),
-};
-
-const mockJwtStrategy: JwtStrategy = {
-  validate: jest.fn(),
-};
-
-const authMockService: AuthService = {
-  login: jest.fn(),
-};
-
-const userMockRepository: UserRepository = {
-  findByEmail: jest.fn(),
-  findById: jest.fn(),
-  create: jest.fn(),
-};
+import { userMockRepository, userMockResolver } from './user.mock';
+import { authMockService, JwtMockStrategy } from 'src/auth/auth.mock';
 
 describe('UserServiceTest', () => {
   let service: UserService;
@@ -54,7 +33,7 @@ describe('UserServiceTest', () => {
     },
     {
       provide: AuthInjectionToken.JwtStrategy,
-      useValue: mockJwtStrategy,
+      useValue: JwtMockStrategy,
     },
     {
       provide: AuthInjectionToken.encryptPassword,
