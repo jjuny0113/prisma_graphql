@@ -16,10 +16,6 @@ describe('UserServiceTest', () => {
   let repository: UserRepository;
   const infrastructure: Provider[] = [
     {
-      provide: UserResolver,
-      useValue: userMockResolver,
-    },
-    {
       provide: UserInjectionToken.USER_REPOSITORY,
       useValue: userMockRepository,
     },

@@ -41,7 +41,7 @@ describe('AuthService', () => {
       },
     ];
     const module: TestingModule = await Test.createTestingModule({
-      providers: [...providers],
+      providers,
     }).compile();
 
     service = module.get<AuthService>(AuthInjectionToken.AuthService);
