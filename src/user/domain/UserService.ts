@@ -1,5 +1,7 @@
-import { CreateUserInput, User } from 'src/graphql';
+import { CreateUserInput } from 'src/graphql';
 
 export interface UserService {
-  signUp(createUserInput: CreateUserInput): Promise<User>;
+  signUp(createUserInput: CreateUserInput): Promise<{
+    message: string;
+  }>;
 }

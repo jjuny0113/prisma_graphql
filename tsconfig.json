@@ -17,14 +17,14 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "types": [
-      "@types/jest",
-      "@quramy/jest-prisma"
-    ],
+    "types": ["@types/jest", "@quramy/jest-prisma"],
     "plugins": [
       {
         "transform": "typia/lib/transform"
       }
-    ]
+    ],
+    "paths": {
+      "src/*": ["./src/*"]
+    }
   }
 }

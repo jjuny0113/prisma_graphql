@@ -8,6 +8,7 @@ import { UserInjectionToken } from './UserInjectionToken';
 import { AuthInjectionToken } from 'src/auth/AuthInjectionToken';
 import { AuthModule } from 'src/auth/auth.module';
 import { JwtStrategyImpl } from 'src/auth/jwt/jwt.strategy';
+import { encryptPassword } from 'src/auth/util/bcrypt';
 
 const infrastructure: Provider[] = [
   {
@@ -25,6 +26,10 @@ const infrastructure: Provider[] = [
   {
     provide: AuthInjectionToken.JwtStrategy,
     useClass: JwtStrategyImpl,
+  },
+  {
+    provide: AuthInjectionToken.encryptPassword,
+    useValue: encryptPassword,
   },
 ];
 @Module({
